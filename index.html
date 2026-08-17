@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🏆 OBR — Ranking de Robótica</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --accent: #f43f5e;
+      --accent-hover: #e11d48;
+      --accent-blue: #38bdf8;
+      --accent-green: #4ade80;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1rem 0.5rem;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+    h1 span { color: var(--accent); }
+    
+    h2 {
+      margin-bottom: 0.8rem;
+      font-size: 1.15rem;
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 0.75rem; }
+    .field { display: flex; flex-direction: column; gap: 0.35rem; }
+    
+    label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+
+    input, select, button {
+      padding: 0.7rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--text-main);
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25);
+    }
+
+    select option { background: #1e293b; color: #fff; }
+
+    button {
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    button:hover { background: var(--accent-hover); }
+    button:active { transform: scale(0.97); }
+
+    .btn-secondary {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--accent-blue);
+    }
+    .btn-secondary:hover { background: rgba(56, 189, 248, 0.25); }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+      min-height: auto;
+    }
+    .btn-danger:hover { background: rgba(239, 68, 68, 0.3); }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      padding: 2px;
+    }
+    .stepper button {
+      width: 40px;
+      height: 40px;
+      min-height: 40px;
+      font-size: 1.2rem;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+    }
+    .stepper input {
+      text-align: center;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      padding: 0;
+      width: 100%;
+    }
+
+    .toggle-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      background: rgba(15, 23, 42, 0.4);
+      padding: 0.85rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+    .toggle-item span { font-size: 0.85rem; color: var(--text-main); }
+    
+    .toggle-item input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .badge-mult {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .calc-box {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px dashed rgba(244, 63, 94, 0.4);
+      padding: 1rem;
+      border-radius: 12px;
+      margin-top: 1.2rem;
+    }
+
+    .cp-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      padding: 0.85rem;
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
+    }
+
+    .apply-btns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+    .apply-btns button { font-size: 0.85rem; padding: 0.5rem; }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 0.5rem;
+      border-radius: 10px;
+    }
+    table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+    th, td { padding: 0.75rem 0.6rem; text-align: center; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+    th { background: rgba(244, 63, 94, 0.2); color: var(--text-main); font-weight: 600; }
+    tr:hover td { background: rgba(255, 255, 255, 0.03); }
+
+    .gold { color: #ffd700; font-weight: 800; }
+    .silver { color: #e2e8f0; font-weight: 800; }
+    .bronze { color: #f97316; font-weight: 800; }
+
+    .msg { margin-top: 0.75rem; font-size: 0.85rem; padding: 0.6rem; border-radius: 8px; display: none; }
+    .msg.ok { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); border: 1px solid rgba(74, 222, 128, 0.3); display: block; }
+
+    .placar-fullscreen {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .placar-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .placar-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(74, 222, 128, 0.15);
+      border: 1px solid rgba(74, 222, 128, 0.4);
+      color: var(--accent-green);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-green);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .placar-table th {
+      font-size: 1.1rem;
+      padding: 1rem;
+    }
+    .placar-table td {
+      font-size: 1.2rem;
+      padding: 1rem;
+    }
+
+    .view-route { display: none; }
+    .view-route.active { display: block; }
+
+    @media (max-width: 600px) {
+      body { padding: 0.5rem 0.25rem; }
+      .card { padding: 0.85rem; }
+      .form-row { flex-direction: column; align-items: stretch; }
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .placar-header h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ROTA 1: PAINEL DE CONTROLE (#painel) -->
+  <div id="viewPanel" class="view-route container">
+    <header>
+      <h1>🏆 <span>OBR</span> — Painel Geral</h1>
+    </header>
+
+    <!-- 1. Cadastrar Time -->
+    <div class="card">
+      <h2>1. Cadastrar Time</h2>
+      <div class="form-row">
+        <input type="text" id="teamName" placeholder="Nome do time (ex.: Robôs A)" style="flex:1;" />
+        <button onclick="registerTeam()">Cadastrar Time</button>
+      </div>
+      <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;">
+        A pontuação final é a soma das 2 MELHORES tentativas entre 3.
+      </p>
+    </div>
+
+    <!-- 2. Registrar Pontuações -->
+    <div class="card">
+      <h2>2. Registrar Tentativas</h2>
+      
+      <div class="field" style="margin-bottom: 1rem;">
+        <label for="teamSelect">Selecionar Time:</label>
+        <select id="teamSelect" onchange="loadTeamScores()">
+          <option value="">— Selecione um time —</option>
+        </select>
+      </div>
+
+      <!-- Lançamento Rápido -->
+      <div class="grid-4" style="margin-bottom: 0.75rem;">
+        <div class="field">
+          <label for="a1">Pontos T1:</label>
+          <input type="number" id="a1" min="0" placeholder="0" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label for="a2">Pontos T2:</label>
+          <input type="number" id="a2" min="0" placeholder="0" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label for="a3">Pontos T3:</label>
+          <input type="number" id="a3" min="0" placeholder="0" inputmode="numeric" />
+        </div>
+        <div class="field" style="justify-content: flex-end;">
+          <button onclick="saveScores()">💾 Salvar</button>
+        </div>
+      </div>
+
+      <!-- Calculadora Detalhada -->
+      <div class="calc-box">
+        <h3 style="color: var(--accent-blue); margin-bottom: 0.8rem; font-size: 1rem;">🧮 Calculadora da Tentativa</h3>
+
+        <!-- Ladrilho Inicial -->
+        <div style="margin-bottom: 1rem;">
+          <div class="toggle-group">
+            <label class="toggle-item">
+              <span>🚀 Ladrilho Inicial (+5 pts)</span>
+              <input type="checkbox" id="obsInicial" onchange="runCalculator()" checked />
+            </label>
+          </div>
+        </div>
+        
+        <!-- Checkpoints dinâmicos -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h4 style="font-size: 0.85rem; color: #ffd700;">📍 Checkpoints e Falhas:</h4>
+          <button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; min-height: 36px;" onclick="addCheckpoint()">+ Add CP</button>
+        </div>
+
+        <div id="checkpointsContainer"></div>
+
+        <!-- Obstáculos -->
+        <h4 style="font-size: 0.85rem; color: var(--accent-blue); margin-top: 1rem; margin-bottom: 0.5rem;">🚧 Obstáculos Superados:</h4>
+        <div class="grid-4">
+          <div class="field">
+            <label>Curva verde (10pts):</label>
+            <div class="stepper">
+              <button onclick="stepObs('obsCurva', -1)">-</button>
+              <input type="number" id="obsCurva" min="0" value="0" inputmode="numeric" oninput="runCalculator()" />
+              <button onclick="stepObs('obsCurva', 1)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Interseção (10pts):</label>
+            <div class="stepper">
+              <button onclick="stepObs('obsIntersecao', -1)">-</button>
+              <input type="number" id="obsIntersecao" min="0" value="0" inputmode="numeric" oninput="runCalculator()" />
+              <button onclick="stepObs('obsIntersecao', 1)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Gangorra (20pts):</label>
+            <div class="stepper">
+              <button onclick="stepObs('obsGangorra', -1)">-</button>
+              <input type="number" id="obsGangorra" min="0" value="0" inputmode="numeric" oninput="runCalculator()" />
+              <button onclick="stepObs('obsGangorra', 1)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Desvio (20pts):</label>
+            <div class="stepper">
+              <button onclick="stepObs('obsDesvio', -1)">-</button>
+              <input type="number" id="obsDesvio" min="0" value="0" inputmode="numeric" oninput="runCalculator()" />
+              <button onclick="stepObs('obsDesvio', 1)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Gap / Linha (10pts):</label>
+            <div class="stepper">
+              <button onclick="stepObs('obsGap', -1)">-</button>
+              <input type="number" id="obsGap" min="0" value="0" inputmode="numeric" oninput="runCalculator()" />
+              <button onclick="stepObs('obsGap', 1)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Rampa (10pts):</label>
+            <div class="stepper">
+              <button onclick="stepObs('obsRampa', -1)">-</button>
+              <input type="number" id="obsRampa" min="0" value="0" inputmode="numeric" oninput="runCalculator()" />
+              <button onclick="stepObs('obsRampa', 1)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Lombada (10pts):</label>
+            <div class="stepper">
+              <button onclick="stepObs('obsLombada', -1)">-</button>
+              <input type="number" id="obsLombada" min="0" value="0" inputmode="numeric" oninput="runCalculator()" />
+              <button onclick="stepObs('obsLombada', 1)">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Ladrilho Chegada:</label>
+            <select id="obsChegada" onchange="runCalculator()" style="height: 44px;">
+              <option value="0">Não</option>
+              <option value="1">Sim (+60 pts)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Área de Resgate (Multiplicadores) -->
+        <h4 style="font-size: 0.85rem; color: var(--accent-green); margin-top: 1.2rem; margin-bottom: 0.5rem;">🏥 Área de Resgate (Multiplicadores):</h4>
+        <div class="toggle-group">
+          <label class="toggle-item">
+            <span>Vítimas vivas no lugar certo</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="badge-mult">+0.3x</span>
+              <input type="checkbox" id="resgateVivas" onchange="runCalculator()" />
+            </div>
+          </label>
+          <label class="toggle-item">
+            <span>Vítimas mortas no lugar certo</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="badge-mult">+0.3x</span>
+              <input type="checkbox" id="resgateMortas" onchange="runCalculator()" />
+            </div>
+          </label>
+          <label class="toggle-item">
+            <span>Vítimas colocadas invertidas</span>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="badge-mult">+0.1x</span>
+              <input type="checkbox" id="resgateInvertidas" onchange="runCalculator()" />
+            </div>
+          </label>
+        </div>
+
+        <!-- Painel de Resultado -->
+        <div style="margin-top: 1.2rem; text-align: center; background: rgba(15, 23, 42, 0.8); padding: 0.85rem; border-radius: 12px; border: 1px solid var(--border-color);">
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem;">
+            Multiplicador Total: <strong id="calcMultDisplay" style="color: var(--accent-green);">1.0x</strong>
+          </div>
+          <div style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 0.5rem;">
+            Total da Tentativa: <strong id="calcTotal" style="font-size: 1.5rem; color: var(--accent-green);">0</strong> pts
+          </div>
+          <div class="apply-btns">
+            <button class="btn-secondary" onclick="applyToAttempt('a1')">Aplicar T1</button>
+            <button class="btn-secondary" onclick="applyToAttempt('a2')">Aplicar T2</button>
+            <button class="btn-secondary" onclick="applyToAttempt('a3')">Aplicar T3</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="scoreMsg" class="msg"></div>
+    </div>
+
+    <!-- 3. Ranking Geral -->
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem;">
+        <h2 style="margin-bottom: 0;">3. Ranking Geral</h2>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button class="btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem; min-height: auto; border-radius: 8px;" onclick="openLivePlacar()">📺 Placar em Aba Separada</button>
+          <button class="btn-danger" style="font-size: 0.75rem;" onclick="clearAllData()">⚠️ Limpar Tudo</button>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Time</th>
+              <th>T1</th>
+              <th>T2</th>
+              <th>T3</th>
+              <th>Final</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="rankingBody">
+            <tr><td colspan="7" style="color:var(--text-muted);">Nenhum time cadastrado.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ROTA 2: TELA EXCLUSIVA DO PLACAR (#placar) -->
+  <div id="viewPlacar" class="view-route placar-fullscreen">
+    <div style="margin-bottom: 1rem;">
+      <a href="#painel" style="color: var(--accent-blue); text-decoration: none; font-size: 0.9rem;">← Voltar ao Painel</a>
+    </div>
+    
+    <div class="placar-header">
+      <h1>🏆 <span>OBR</span> — Placar Oficial</h1>
+      <div class="live-badge">
+        <span class="live-dot"></span> Ao Vivo
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="table-container">
+        <table class="placar-table">
+          <thead>
+            <tr>
+              <th>Posição</th>
+              <th>Time</th>
+              <th>T1</th>
+              <th>T2</th>
+              <th>T3</th>
+              <th>Pontuação Final</th>
+            </tr>
+          </thead>
+          <tbody id="liveRankingBody">
+            <tr><td colspan="6" style="color:var(--text-muted);">Aguardando dados...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'robotica_teams_data';
+
+    function getStoredData() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function saveStoredData(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      renderRanking();
+      renderLiveRanking();
+    }
+
+    // --- GERENCIAMENTO DE ROTAS (Navegação SPA) ---
+    function handleRoute() {
+      const hash = window.location.hash || '#painel';
+      const viewPanel = document.getElementById('viewPanel');
+      const viewPlacar = document.getElementById('viewPlacar');
+
+      if (hash === '#placar') {
+        viewPanel.classList.remove('active');
+        viewPlacar.classList.add('active');
+        renderLiveRanking();
+      } else {
+        viewPlacar.classList.remove('active');
+        viewPanel.classList.add('active');
+        refreshAll();
+      }
+    }
+
+    function openLivePlacar() {
+      window.open(window.location.pathname + '#placar', '_blank');
+    }
+
+    // Sincronização em Tempo Real via Evento 'storage'
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY) {
+        renderRanking();
+        renderLiveRanking();
+      }
+    });
+
+    window.addEventListener('hashchange', handleRoute);
+
+    // --- LÓGICA DA CALCULADORA ---
+    let checkpointsList = [{ ladrilhos: 0, falhas: 0 }];
+
+    function renderCheckpoints() {
+      const container = document.getElementById('checkpointsContainer');
+      container.innerHTML = checkpointsList.map((cp, idx) => {
+        const valorLadrilho = Math.max(0, 5 - cp.falhas * 2);
+        const subtotal = cp.ladrilhos * valorLadrilho;
+
+        return `
+          <div class="cp-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.4rem;">
+              <strong style="font-size:0.85rem; color:#ffd700;">Checkpoint ${idx + 1}</strong>
+              <small style="color:var(--text-muted); font-size:0.75rem;">${valorLadrilho} pts/ladrilho (Subtotal: ${subtotal})</small>
+              ${checkpointsList.length > 1 ? `<button class="btn-danger" onclick="removeCheckpoint(${idx})">✕</button>` : ''}
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Ladrilhos do CP:</label>
+                <div class="stepper">
+                  <button onclick="stepCP(${idx}, 'ladrilhos', -1)">-</button>
+                  <input type="number" min="0" value="${cp.ladrilhos}" inputmode="numeric" oninput="updateCP(${idx}, 'ladrilhos', this.value)" />
+                  <button onclick="stepCP(${idx}, 'ladrilhos', 1)">+</button>
+                </div>
+              </div>
+              <div class="field">
+                <label>Falhas/Resets no CP:</label>
+                <div class="stepper">
+                  <button onclick="stepCP(${idx}, 'falhas', -1)">-</button>
+                  <input type="number" min="0" value="${cp.falhas}" inputmode="numeric" oninput="updateCP(${idx}, 'falhas', this.value)" />
+                  <button onclick="stepCP(${idx}, 'falhas', 1)">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      runCalculator();
+    }
+
+    function stepCP(index, field, delta) {
+      checkpointsList[index][field] = Math.max(0, (checkpointsList[index][field] || 0) + delta);
+      renderCheckpoints();
+    }
+
+    function stepObs(inputId, delta) {
+      const el = document.getElementById(inputId);
+      if (!el) return;
+      const current = parseInt(el.value) || 0;
+      el.value = Math.max(0, current + delta);
+      runCalculator();
+    }
+
+    function addCheckpoint() {
+      checkpointsList.push({ ladrilhos: 0, falhas: 0 });
+      renderCheckpoints();
+    }
+
+    function removeCheckpoint(index) {
+      checkpointsList.splice(index, 1);
+      renderCheckpoints();
+    }
+
+    function updateCP(index, field, value) {
+      checkpointsList[index][field] = parseInt(value) || 0;
+      renderCheckpoints();
+    }
+
+    function runCalculator() {
+      const totalFalhas = checkpointsList.reduce((sum, cp) => sum + (cp.falhas || 0), 0);
+
+      const pontosLadrilhos = checkpointsList.reduce((sum, cp) => {
+        const valorLadrilho = Math.max(0, 5 - (cp.falhas || 0) * 2);
+        return sum + ((cp.ladrilhos || 0) * valorLadrilho);
+      }, 0);
+
+      const ladrilhoInicial = document.getElementById('obsInicial').checked ? 5 : 0;
+
+      const chegou = parseInt(document.getElementById('obsChegada').value) || 0;
+      const pontosChegada = chegou ? Math.max(0, 60 - (totalFalhas * 5)) : 0;
+
+      const selectChegada = document.getElementById('obsChegada');
+      if (selectChegada) {
+        selectChegada.options[1].text = `Sim (+${Math.max(0, 60 - (totalFalhas * 5))} pts)`;
+      }
+
+      const pontosObstaculos = 
+        (parseInt(document.getElementById('obsCurva').value) || 0) * 10 +
+        (parseInt(document.getElementById('obsIntersecao').value) || 0) * 10 +
+        (parseInt(document.getElementById('obsGangorra').value) || 0) * 20 +
+        (parseInt(document.getElementById('obsDesvio').value) || 0) * 20 +
+        (parseInt(document.getElementById('obsGap').value) || 0) * 10 +
+        (parseInt(document.getElementById('obsRampa').value) || 0) * 10 +
+        (parseInt(document.getElementById('obsLombada').value) || 0) * 10 +
+        pontosChegada;
+
+      const basePontos = pontosLadrilhos + ladrilhoInicial + pontosObstaculos;
+
+      let bonusMultiplicador = 0;
+      if (document.getElementById('resgateVivas').checked) bonusMultiplicador += 0.3;
+      if (document.getElementById('resgateMortas').checked) bonusMultiplicador += 0.3;
+      if (document.getElementById('resgateInvertidas').checked) bonusMultiplicador += 0.1;
+
+      const multiplicadorTotal = Number((1.0 + bonusMultiplicador).toFixed(1));
+      const totalFinal = Math.round(basePontos * multiplicadorTotal);
+
+      document.getElementById('calcMultDisplay').textContent = multiplicadorTotal.toFixed(1) + 'x';
+      document.getElementById('calcTotal').textContent = totalFinal;
+      
+      return totalFinal;
+    }
+
+    function applyToAttempt(inputTargetId) {
+      const total = runCalculator();
+      document.getElementById(inputTargetId).value = total;
+    }
+
+    function calculateFinalScore(attempts) {
+      if (!attempts || attempts.length === 0) return 0;
+      const sorted = [...attempts].sort((a, b) => b - a);
+      return sorted.slice(0, 2).reduce((sum, value) => sum + value, 0);
+    }
+
+    // --- CADASTRO E GERENCIAMENTO DE PONTOS ---
+    function registerTeam() {
+      const input = document.getElementById('teamName');
+      const name = input.value.trim();
+      if (!name) return alert('Informe o nome do time.');
+
+      const teams = getStoredData();
+      if (teams.some(t => t.name.toLowerCase() === name.toLowerCase())) {
+        return alert('Já existe um time cadastrado com esse nome.');
+      }
+
+      const newTeam = { id: Date.now(), name: name, attempts: [0, 0, 0] };
+      teams.push(newTeam);
+      saveStoredData(teams);
+      input.value = '';
+      refreshAll();
+    }
+
+    function removeTeam(teamId, teamName) {
+      if (!confirm(`Excluir o time "${teamName}"?`)) return;
+      let teams = getStoredData();
+      teams = teams.filter(t => t.id !== teamId);
+      saveStoredData(teams);
+      refreshAll();
+    }
+
+    function loadTeamSelect() {
+      const teams = getStoredData();
+      const select = document.getElementById('teamSelect');
+      const currentSelected = select.value;
+
+      select.innerHTML = '<option value="">— Selecione um time —</option>';
+      teams.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.id;
+        opt.textContent = t.name;
+        select.appendChild(opt);
+      });
+
+      if (currentSelected && teams.some(t => t.id == currentSelected)) {
+        select.value = currentSelected;
+      }
+    }
+
+    function loadTeamScores() {
+      const teamId = Number(document.getElementById('teamSelect').value);
+      if (!teamId) return;
+
+      const teams = getStoredData();
+      const team = teams.find(t => t.id === teamId);
+      if (team && team.attempts.length === 3) {
+        document.getElementById('a1').value = team.attempts[0];
+        document.getElementById('a2').value = team.attempts[1];
+        document.getElementById('a3').value = team.attempts[2];
+      }
+    }
+
+    function saveScores() {
+      const teamId = Number(document.getElementById('teamSelect').value);
+      if (!teamId) return alert('Selecione um time.');
+
+      const a1 = parseFloat(document.getElementById('a1').value) || 0;
+      const a2 = parseFloat(document.getElementById('a2').value) || 0;
+      const a3 = parseFloat(document.getElementById('a3').value) || 0;
+
+      const teams = getStoredData();
+      const team = teams.find(t => t.id === teamId);
+      if (!team) return alert('Time não encontrado.');
+
+      team.attempts = [a1, a2, a3];
+      saveStoredData(teams);
+
+      const msg = document.getElementById('scoreMsg');
+      msg.className = 'msg ok';
+      msg.textContent = '✅ Salvo com sucesso!';
+      setTimeout(() => { msg.className = 'msg'; }, 2500);
+
+      refreshAll();
+    }
+
+    // --- RENDERIZAÇÃO DOS RANKINGS ---
+    function renderRanking() {
+      const teams = getStoredData();
+      const tbody = document.getElementById('rankingBody');
+      if (!tbody) return;
+
+      if (teams.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="color:var(--text-muted);">Nenhum time cadastrado.</td></tr>';
+        return;
+      }
+
+      const ranking = teams.map(t => ({
+        ...t,
+        finalScore: calculateFinalScore(t.attempts)
+      })).sort((a, b) => b.finalScore - a.finalScore);
+
+      tbody.innerHTML = ranking.map((row, i) => {
+        const medal = i === 0 ? 'class="gold"' : i === 1 ? 'class="silver"' : i === 2 ? 'class="bronze"' : '';
+        return `
+          <tr>
+            <td ${medal}>${i + 1}º</td>
+            <td><strong>${row.name}</strong></td>
+            <td>${row.attempts[0]}</td>
+            <td>${row.attempts[1]}</td>
+            <td>${row.attempts[2]}</td>
+            <td><strong style="color:var(--accent-green);">${row.finalScore}</strong></td>
+            <td>
+              <button class="btn-danger" onclick="removeTeam(${row.id}, '${row.name.replace(/'/g, "\\'")}')">🗑️</button>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    function renderLiveRanking() {
+      const teams = getStoredData();
+      const tbody = document.getElementById('liveRankingBody');
+      if (!tbody) return;
+
+      if (teams.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="color:var(--text-muted);">Nenhum time cadastrado.</td></tr>';
+        return;
+      }
+
+      const ranking = teams.map(t => ({
+        ...t,
+        finalScore: calculateFinalScore(t.attempts)
+      })).sort((a, b) => b.finalScore - a.finalScore);
+
+      tbody.innerHTML = ranking.map((row, i) => {
+        const medal = i === 0 ? 'class="gold"' : i === 1 ? 'class="silver"' : i === 2 ? 'class="bronze"' : '';
+        return `
+          <tr>
+            <td ${medal}>${i + 1}º</td>
+            <td><strong>${row.name}</strong></td>
+            <td>${row.attempts[0]}</td>
+            <td>${row.attempts[1]}</td>
+            <td>${row.attempts[2]}</td>
+            <td><strong style="color:var(--accent-green);">${row.finalScore} pts</strong></td>
+          </tr>`;
+      }).join('');
+    }
+
+    function clearAllData() {
+      if (confirm('Atenção: Deseja apagar TODOS os dados registrados?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        refreshAll();
+      }
+    }
+
+    function refreshAll() {
+      loadTeamSelect();
+      renderRanking();
+      renderLiveRanking();
+    }
+
+    renderCheckpoints();
+    handleRoute();
+  </script>
+</body>
+</html>
